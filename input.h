@@ -1,6 +1,12 @@
 #ifndef INPUT_H
 #define INPUT_H
-#include <SDL/SDL.h>
+
 #include "globals.h"
-void input();
+
+int inButton(Button b);
+
+int inWhichButton(Button *b);
+
+int input(Grid *g, Button *b);
+
 #endif

@@ -1,102 +1,112 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
- 
+
 #include <SDL/SDL.h>
-#include <SDL/SDL_keysym.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 
 #include "globals.h"
 #include "input.h"
- 
-#define WINHI 600 // window height
-#define WINWI 800 // window width
+#include "grid.h"
+#include "view.h"
+#include "save.h"
 
 int main(int argc, char *argv[]){
-	Uint32 initflags = SDL_INIT_VIDEO; //| SDL_DOUBLEBUF;  /* See documentation for details */
-   
-	Uint8  video_bpp = 32; // 32 bits de couleur
-
-	Uint32 videoflags = SDL_HWSURFACE;
-
-	Uint32 vert, rouge;
- 
-	if ( SDL_Init(initflags) < 0 ){
+    SDL_ShowCursor(0);
+	Uint32 initflags = SDL_INIT_VIDEO;
+    Uint8  video_bpp = 32;
+	
+    if (SDL_Init(initflags)<0){
 		fprintf(stderr, "SDL could not be initialized successfully : %s\n", SDL_GetError());
-		exit(1);
+		return 1;
 	}
- 
-	/* Set video mode */
-	SDL_Surface *ecran = SDL_SetVideoMode(WINWI, WINHI, video_bpp, videoflags); // surface principale
-
-	if (ecran == NULL){
+	screen = SDL_SetVideoMode(WINWI, WINHI, video_bpp, SDL_HWSURFACE);
+	if (!screen){
 		fprintf(stderr, "Couldn't establish video mode %dx%dx%d : %s\n", WINHI, WINHI, video_bpp, SDL_GetError());
 		SDL_Quit();
-		exit(2);
+		return 2;
 	}
+	Grid g;
+	initGrid(&g);
 
-	vert = SDL_MapRGB(ecran->format,0,128,0);
-
-	SDL_FillRect(ecran,NULL,vert);
-	SDL_WM_SetCaption("Jeu de Hex", NULL); // legende de la fenêtre
-
-	TTF_Init();
+    SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,255,0));
 	
+	TTF_Init();
 	TTF_Font* fontMenu = TTF_OpenFont("arvo/Arvo-Regular.ttf",60);
 	SDL_Color fontBlack = {0,0,0};
-	SDL_Surface* texte1 = TTF_RenderText_Blended(fontMenu,"Test",fontBlack);
+	SDL_Rect posB; posB.x=250; posB.y=115; posB.w=260; posB.h=70;
+	Button b[4];
+	b[0] =initButton(fontMenu,"      pvp",posB); posB.y+=100;
+	b[1] =initButton(fontMenu," 1 player",posB); posB.y+=100;
+	b[2] =initButton(fontMenu,"     load",posB); posB.y+=100;
+	b[3] =initButton(fontMenu,"     quit",posB);
 
-	SDL_Surface *rectangle = SDL_CreateRGBSurface(initflags,225,80,video_bpp,0,0,0,0);
-	rouge = SDL_MapRGB(rectangle->format,255,0,0);
-	SDL_FillRect(rectangle,NULL,rouge); // un fond rouge
-
-	SDL_Rect posRect, posTexte1;
-	posRect.x = 20;
-	posRect.y = 80;
-
-	posTexte1.x = 25;
-	posTexte1.y = 85;
-
-	SDL_BlitSurface(rectangle,NULL,ecran,&posRect);
-	SDL_BlitSurface(texte1,NULL,ecran,&posTexte1);
-
-	SDL_Surface* board = SDL_LoadBMP("Images/TMP/hex.bmp");
-	SDL_Rect posBoard;
-	posBoard.x = 270;
-	posBoard.y = 100;
-	SDL_BlitSurface(board,NULL,ecran,&posBoard);
-
-	SDL_Surface *pionBleu;
-	pionBleu = SDL_LoadBMP("Images/TMP/blue.bmp");
-	SDL_Rect posPionBleu;               
-	posPionBleu.x = 377;
-	posPionBleu.y = 149;
-	SDL_BlitSurface(pionBleu,NULL,ecran,&posPionBleu);
-
-	// Affichege du pion rouge
-	SDL_Surface *pionRouge = SDL_LoadBMP("Images/TMP/red.bmp");
-	SDL_Rect posPionRouge;               
-	posPionRouge.x = 543;
-	posPionRouge.y = 273;
-	SDL_BlitSurface(pionRouge,NULL,ecran,&posPionRouge);
-
-	SDL_Flip(ecran); //maj des surfaces
-	end=0;
-	while(!end){
-		SDL_Flip(ecran); //maj des surfaces
-		input();
+	SDL_WM_SetCaption("Jeu de Hex", NULL);
+	if(argc>1){
+		g.b=SDL_LoadBMP("Images/TMP/hex.bmp");
+		g.bh=SDL_LoadBMP("Images/TMP/hex.bmp");
+		red=SDL_LoadBMP("Images/TMP/red.bmp");
+		blue=SDL_LoadBMP("Images/TMP/blue.bmp");
+		hover=SDL_LoadBMP("Images/TMP/hover.bmp");
+		hred=SDL_LoadBMP("Images/TMP/hover_red.bmp");
+		hblue=SDL_LoadBMP("Images/TMP/hover_blue.bmp");
+		x=SDL_LoadBMP("Images/TMP/x.bmp");
+		y=SDL_LoadBMP("Images/TMP/y.bmp");
+		xy=SDL_LoadBMP("Images/TMP/xy.bmp");
+        cursorgif[0] = IMG_Load("Images/cursor1.png");
+        cursorgif[1] = IMG_Load("Images/cursor2.png");
+        cursorgif[2] = IMG_Load("Images/cursor3.png");
+        cursorgif[3] = IMG_Load("Images/cursor4.png");
+		//SDL_SetColorKey(g.b, SDL_SRCCOLORKEY, SDL_MapRGB(g.b->format, 0, 255, 0));
+		SDL_SetColorKey(g.bh, SDL_SRCCOLORKEY, SDL_MapRGB(g.bh->format, 0, 255, 0));
+		SDL_SetColorKey(blue, SDL_SRCCOLORKEY, SDL_MapRGB(blue->format, 0, 255, 0));
+		SDL_SetColorKey(red, SDL_SRCCOLORKEY, SDL_MapRGB(red->format, 0, 255, 0));
+		SDL_SetColorKey(hred, SDL_SRCCOLORKEY, SDL_MapRGB(hred->format, 0, 255, 0));
+		SDL_SetColorKey(hblue, SDL_SRCCOLORKEY, SDL_MapRGB(hblue->format, 0, 255, 0));
+		SDL_SetColorKey(hover, SDL_SRCCOLORKEY, SDL_MapRGB(hover->format, 0, 255, 0));
+		//SDL_SetColorKey(x, SDL_SRCCOLORKEY, SDL_MapRGB(x->format, 0, 255, 0));
+		SDL_SetColorKey(y, SDL_SRCCOLORKEY, SDL_MapRGB(y->format, 0, 255, 0));
+		SDL_SetColorKey(xy, SDL_SRCCOLORKEY, SDL_MapRGB(xy->format, 0, 255, 0));
+	}else{
+        g.b=IMG_Load("Images/TMP/hex.bmp");
+		g.bh=IMG_Load("Images/TMP/hex.bmp");
+		red=IMG_Load("Images/red.png");
+		blue=IMG_Load("Images/blue.png");
+		hover=IMG_Load("Images/hover.png");
+		hred=IMG_Load("Images/hover_red.png");
+		hblue=IMG_Load("Images/hover_blue.png");
+		x=IMG_Load("Images/x.png");
+		y=IMG_Load("Images/y.png");
+		xy=IMG_Load("Images/xy.png");
+        cursorgif[0] = IMG_Load("Images/cursor1.png");
+        cursorgif[1] = IMG_Load("Images/cursor2.png");
+        cursorgif[2] = IMG_Load("Images/cursor3.png");
+        cursorgif[3] = IMG_Load("Images/cursor4.png");
 	}
-		// refresh screen
-	SDL_Flip(ecran); //maj des surfaces pour affichage
-	//
-	/* Clean up the SDL library */
-	SDL_FreeSurface(ecran);
-	SDL_FreeSurface(rectangle);
-	SDL_FreeSurface(board);
+    FILE* fHistorique = NULL;
+    fHistorique = fopen("historique.sav", "w");
+    fclose(fHistorique);
+	mode=0; player=0;
+	while(input(&g,b)){
+        int i;
+		if(!mode) for(i=0; i<4; i++) blitButton(b[i]);
+		else{
+			update(&g);
+			blitImage(g.b,g.bh,0,0);
+		}
+        mouse(cursorgif);
+		SDL_Flip(screen);
+	}
+
+	//Clean up the SDL library
+	SDL_FreeSurface(screen);
+	SDL_FreeSurface(red);
+	SDL_FreeSurface(blue);
 	TTF_CloseFont(fontMenu);
-	SDL_FreeSurface(texte1);
+	SDL_FreeSurface(hover);
+	SDL_FreeSurface(hred);
+	SDL_FreeSurface(hblue);
 	TTF_Quit();
 	SDL_Quit();
-	return(0);
+	return 0;
 }

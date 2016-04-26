@@ -1,46 +1,88 @@
 #include "input.h"
-#include "globals.h"
-#include <stdio.h>
-#include <SDL/SDL.h>
-void input(){
+#include "grid.h"
+#include "view.h"
+#include "Save.h"
+int inButton(Button b){
+	return cursorX>=b.rect.x && cursorX<b.rect.x+b.rect.w && cursorY>=b.rect.y && cursorY<b.rect.y+b.rect.h;
+}
+
+int inWhichButton(Button *b){
+	int i;
+	for(i=0;i<4;i++){
+		if(inButton(b[i])) return i;
+	}
+	return -1;
+}
+
+int input(Grid *g, Button *b){
 	SDLKey key_pressed;
-	SDL_WaitEvent(&event);
-	switch (event.type){
+	SDL_Rect p=gridCursorPosition();
+	SDL_Event event; SDL_WaitEvent(&event);
+	CellBlock cb;
+	int i;
+	switch(event.type){
 		case SDL_MOUSEMOTION:
-			//printf("Ça bouge\n");
-			break;
+			cursorX = event.motion.x;
+			cursorY = event.motion.y;
+		break;
 		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_LEFT){
-				int clicX = event.motion.x;
-				int clicY = event.motion.y;
-				printf("X=%d Y=%d\n",clicX,clicY);
-			}
-			break;
-		case SDL_KEYDOWN:
-			key_pressed = event.key.keysym.sym;
-			switch (key_pressed){
-				case SDLK_ESCAPE:
-					end=1;
-					break;
-				case SDLK_LEFT:
-					printf("left +1\n");
-					break;
-				case SDLK_RIGHT:
-					printf("right +1\n"); 
-					break;
-				case SDLK_UP:
-					printf("up +1\n");
-					break;
-				case SDLK_DOWN:
-					printf("down +1\n");
-					break;
+			switch(mode){
+				case 0:
+					switch(inWhichButton(b)){
+						case 0:
+							SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,255,0));
+							mode=1;
+						break;
+						case 1:break;
+						case 2:break;
+						case 3:
+							return 0;
+						default: break;
+					}
+				break;
+				case 1:
+					if(mode==2)break;
+					if(inGrid() && emptyCell(*g,p)){
+						addToGrid(&(*g),p);
+						cb.content=0;
+						addToBlock(*g,&cb,p.x,p.y);
+						if((!player && blockContainsX(cb,0) && blockContainsX(cb,GRID_SIZE-1))||(player && blockContainsY(cb,0) && blockContainsY(cb,GRID_SIZE-1))){
+							printf("%s wins\n",player? "red":"blue");
+							highLight(g, cb);
+							mode=2;
+						}
+						if(player)player=0; else player=1;
+					}
+                    int xMouse, yMouse;
+                    SDL_GetMouseState(&xMouse,&yMouse);
+                    // 1 -> Save
+                    saveTurn(xMouse,yMouse, player, 1);
+				break;
 				default: break;
 			}
-			break;
+		break;
+		case SDL_KEYDOWN:
+			key_pressed = event.key.keysym.sym;
+			switch(key_pressed){
+				case SDLK_ESCAPE: return 0;
+				break;
+				case SDLK_LEFT:
+					addToBlock(*g,&cb,p.x,p.y);
+				break;
+				case SDLK_RIGHT:
+					for(i=0;i<cb.content;i++) printf("%d %d\n", cb.x[i], cb.y[i]);
+					printf("\n");
+				break;
+				case SDLK_UP: break;
+				case SDLK_DOWN:
+					cb.content=0;
+				break;
+				default: break;
+			}
+		break;
 		case SDL_QUIT:
-			end=1;
-			break;
-		default:
-			break;
+			return 0;
+		default:break;
 	}
+	return 1;
 }
