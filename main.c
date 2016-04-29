@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
@@ -82,9 +83,13 @@ int main(int argc, char *argv[]){
     cursorgif[2] = IMG_Load("Images/cursor3.png");
     cursorgif[3] = IMG_Load("Images/cursor4.png");
 	}
+  if( access( "historique.sav", F_OK ) != -1 ) {
+    NULL;
+  } else {
     FILE* fHistorique = NULL;
     fHistorique = fopen("historique.sav", "w");
     fclose(fHistorique);
+  }
 	mode=0; player=0;
 	while(input(&g,b)){
         int i;

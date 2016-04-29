@@ -1,7 +1,6 @@
 #ifndef GRID_H
 #define GRID_H
 #define GRID_SIZE 11
-#include "view.h"
 #include <SDL/SDL.h>
 
 typedef struct{

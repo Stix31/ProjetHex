@@ -1,4 +1,3 @@
-#include "view.h"
 #include "globals.h"
 
 SDL_Rect gridCursorPosition(){
@@ -61,7 +60,7 @@ int blockContains(CellBlock cb, int x, int y){
 	int i;
 	for(i=0;i<cb.content;i++)
 		if(cb.x[i]==x && cb.y[i]==y) return 1;
-	return 0;	
+	return 0;
 }
 
 void addToBlock(Grid g, CellBlock *cb, int x, int y){

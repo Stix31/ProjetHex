@@ -38,7 +38,10 @@ int input(Grid *g, Button *b){
 							mode=1;
 						break;
 						case 1:break;
-						case 2:break;
+						case 2:
+							loadTurn(g);
+							mode=1;
+						break;
 						case 3:
 							return 0;
 						default: break;
@@ -55,10 +58,10 @@ int input(Grid *g, Button *b){
 							highLight(g, cb);
 							mode=2;
 						}
+						SDL_Rect gridpos=gridCursorPosition();
+						saveTurn(gridpos.x,gridpos.y, player);
 						if(player)player=0; else player=1;
 					}
-					// 1 -> Save
-					saveTurn(cursorX,cursorY, player);
 				break;
 				default: break;
 			}
