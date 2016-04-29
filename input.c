@@ -32,10 +32,8 @@ int input(Grid *g, Button *b){
 				case 0:
 					switch(inWhichButton(b)){
 						case 0:
-							SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,255,0));
-							//wallpaper=IMG_Load("Images/wallpaper.jpg");
-							//blitImage(wallpaper,screen,0,0);
 							mode=1;
+							deleteSave();
 						break;
 						case 1:break;
 						case 2:
