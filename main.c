@@ -77,10 +77,10 @@ int main(int argc, char *argv[]){
 		x=IMG_Load("Images/x.png");
 		y=IMG_Load("Images/y.png");
 		xy=IMG_Load("Images/xy.png");
-        cursorgif[0] = IMG_Load("Images/cursor1.png");
-        cursorgif[1] = IMG_Load("Images/cursor2.png");
-        cursorgif[2] = IMG_Load("Images/cursor3.png");
-        cursorgif[3] = IMG_Load("Images/cursor4.png");
+    cursorgif[0] = IMG_Load("Images/cursor1.png");
+    cursorgif[1] = IMG_Load("Images/cursor2.png");
+    cursorgif[2] = IMG_Load("Images/cursor3.png");
+    cursorgif[3] = IMG_Load("Images/cursor4.png");
 	}
     FILE* fHistorique = NULL;
     fHistorique = fopen("historique.sav", "w");
