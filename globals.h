@@ -9,6 +9,7 @@
 #include "grid.h"
 
 SDL_Surface *screen, *red, *blue, *hover, *hred, *hblue, *cursorgif[4];
+SDL_Surface *wallpaper;
 
 SDL_Surface *x, *y, *xy;
 

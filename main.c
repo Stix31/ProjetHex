@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
     SDL_ShowCursor(0);
 	Uint32 initflags = SDL_INIT_VIDEO;
     Uint8  video_bpp = 32;
-	
+
     if (SDL_Init(initflags)<0){
 		fprintf(stderr, "SDL could not be initialized successfully : %s\n", SDL_GetError());
 		return 1;
@@ -28,12 +28,11 @@ int main(int argc, char *argv[]){
 	}
 	Grid g;
 	initGrid(&g);
+  wallpaper=IMG_Load("Images/wallpaper.jpg");
+  blitImage(wallpaper,screen,0,0);
 
-    SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,255,0));
-	
 	TTF_Init();
 	TTF_Font* fontMenu = TTF_OpenFont("arvo/Arvo-Regular.ttf",60);
-	SDL_Color fontBlack = {0,0,0};
 	SDL_Rect posB; posB.x=250; posB.y=115; posB.w=260; posB.h=70;
 	Button b[4];
 	b[0] =initButton(fontMenu,"      pvp",posB); posB.y+=100;
@@ -53,10 +52,10 @@ int main(int argc, char *argv[]){
 		x=SDL_LoadBMP("Images/TMP/x.bmp");
 		y=SDL_LoadBMP("Images/TMP/y.bmp");
 		xy=SDL_LoadBMP("Images/TMP/xy.bmp");
-        cursorgif[0] = IMG_Load("Images/cursor1.png");
-        cursorgif[1] = IMG_Load("Images/cursor2.png");
-        cursorgif[2] = IMG_Load("Images/cursor3.png");
-        cursorgif[3] = IMG_Load("Images/cursor4.png");
+    cursorgif[0] = IMG_Load("Images/cursor1.png");
+    cursorgif[1] = IMG_Load("Images/cursor2.png");
+    cursorgif[2] = IMG_Load("Images/cursor3.png");
+    cursorgif[3] = IMG_Load("Images/cursor4.png");
 		//SDL_SetColorKey(g.b, SDL_SRCCOLORKEY, SDL_MapRGB(g.b->format, 0, 255, 0));
 		SDL_SetColorKey(g.bh, SDL_SRCCOLORKEY, SDL_MapRGB(g.bh->format, 0, 255, 0));
 		SDL_SetColorKey(blue, SDL_SRCCOLORKEY, SDL_MapRGB(blue->format, 0, 255, 0));
@@ -68,7 +67,7 @@ int main(int argc, char *argv[]){
 		SDL_SetColorKey(y, SDL_SRCCOLORKEY, SDL_MapRGB(y->format, 0, 255, 0));
 		SDL_SetColorKey(xy, SDL_SRCCOLORKEY, SDL_MapRGB(xy->format, 0, 255, 0));
 	}else{
-        g.b=IMG_Load("Images/TMP/hex.bmp");
+    g.b=IMG_Load("Images/TMP/hex.bmp");
 		g.bh=IMG_Load("Images/TMP/hex.bmp");
 		red=IMG_Load("Images/red.png");
 		blue=IMG_Load("Images/blue.png");
@@ -89,8 +88,12 @@ int main(int argc, char *argv[]){
 	mode=0; player=0;
 	while(input(&g,b)){
         int i;
-		if(!mode) for(i=0; i<4; i++) blitButton(b[i]);
+		if(!mode){
+      blitImage(wallpaper,screen,0,0);
+      for(i=0; i<4; i++) blitButton(b[i]);
+    }
 		else{
+      SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,255,0));
 			update(&g);
 			blitImage(g.b,g.bh,0,0);
 		}

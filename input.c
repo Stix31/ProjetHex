@@ -1,7 +1,9 @@
+#include <SDL/SDL_image.h>
 #include "input.h"
 #include "grid.h"
 #include "view.h"
 #include "Save.h"
+
 int inButton(Button b){
 	return cursorX>=b.rect.x && cursorX<b.rect.x+b.rect.w && cursorY>=b.rect.y && cursorY<b.rect.y+b.rect.h;
 }
@@ -31,6 +33,8 @@ int input(Grid *g, Button *b){
 					switch(inWhichButton(b)){
 						case 0:
 							SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,255,0));
+							//wallpaper=IMG_Load("Images/wallpaper.jpg");
+							//blitImage(wallpaper,screen,0,0);
 							mode=1;
 						break;
 						case 1:break;
