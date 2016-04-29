@@ -50,6 +50,7 @@ void update(Grid *g){
 	if(g->posH.x!=-1 && mode!=2) blitImage(g->h,g->bh,g->posH.x, g->posH.y);
 	blitImage(g->bh,screen,GRID_POS_X, GRID_POS_Y);
 }
+
 void mouse(SDL_Surface** s){
     int time = SDL_GetTicks() / 250;
     SDL_ShowCursor(0);
