@@ -9,5 +9,4 @@ void saveTurn(int x,int y, int player);
 
 void loadTurn (Grid *g);
 
-void deleteSave ();
 #endif /* Save_h */

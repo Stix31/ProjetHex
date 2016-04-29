@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 
 #include "globals.h"
 #include "grid.h"
@@ -14,14 +13,10 @@ void saveString(int x,int y, int player, char* turn){
 	sprintf(turn, "%d,%d,%d\n",player,x,y);
 }
 
-void deleteSave (){
-	if( access( "historique.sav", F_OK ) != -1 ) {
-		FILE* fHistorique = NULL;
-		fHistorique = fopen("historique.sav", "w");
-		fclose(fHistorique);
-	}
+/*void loadString(char* turn){
+	sprintf(turn, "%d,%d,%d\n",player,x,y);
 }
-
+*/
 void saveTurn (int x,int y, int player){
 	FILE* fHistorique = NULL;
 	fHistorique = fopen("historique.sav", "a");
