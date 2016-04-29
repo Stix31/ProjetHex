@@ -58,7 +58,7 @@ int input(Grid *g, Button *b){
 						if(player)player=0; else player=1;
 					}
 					// 1 -> Save
-					saveTurn(cursorX,cursorY, player, 1);
+					saveTurn(cursorX,cursorY, player);
 				break;
 				default: break;
 			}
