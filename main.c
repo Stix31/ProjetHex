@@ -93,11 +93,11 @@ int main(int argc, char *argv[]){
       for(i=0; i<4; i++) blitButton(b[i]);
     }
 		else{
-      SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,255,0));
+      SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,150,150,150));
 			update(&g);
 			blitImage(g.b,g.bh,0,0);
 		}
-        mouse(cursorgif);
+    mouse(cursorgif);
 		SDL_Flip(screen);
 	}
 

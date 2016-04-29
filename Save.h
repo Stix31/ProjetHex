@@ -5,6 +5,6 @@
 
 void saveString(int x,int y, int player, char* turn);
 
-void saveTurn(int x,int y, int player, int mode);
+void saveTurn(int x,int y, int player);
 
 #endif /* Save_h */
