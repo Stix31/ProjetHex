@@ -33,7 +33,6 @@ int main(int argc, char *argv[]){
 	
 	TTF_Init();
 	TTF_Font* fontMenu = TTF_OpenFont("arvo/Arvo-Regular.ttf",60);
-	SDL_Color fontBlack = {0,0,0};
 	SDL_Rect posB; posB.x=250; posB.y=115; posB.w=260; posB.h=70;
 	Button b[4];
 	b[0] =initButton(fontMenu,"      pvp",posB); posB.y+=100;

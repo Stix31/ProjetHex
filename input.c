@@ -53,10 +53,8 @@ int input(Grid *g, Button *b){
 						}
 						if(player)player=0; else player=1;
 					}
-                    int xMouse, yMouse;
-                    SDL_GetMouseState(&xMouse,&yMouse);
-                    // 1 -> Save
-                    saveTurn(xMouse,yMouse, player, 1);
+					// 1 -> Save
+					saveTurn(cursorX,cursorY, player, 1);
 				break;
 				default: break;
 			}

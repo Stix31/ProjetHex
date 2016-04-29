@@ -10,9 +10,8 @@ void saveString(int x,int y, int player, char* turn){
 
 void saveTurn (int x,int y, int player, int mode)
 {
-    FILE* fHistorique = NULL;
-    fHistorique = fopen("historique.sav", "a");
-    if (fHistorique != NULL){
+    FILE* fHistorique = fopen("historique.sav", "a");
+    if (!fHistorique){
         /* mode == 1 -> sauvegarde / mode != 1 -> charge */
         if (mode == 1){
             char turn[16];
