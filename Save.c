@@ -38,7 +38,7 @@ void loadTurn (Grid *g) {
 	FILE* fHistorique = NULL;
 	fHistorique = fopen("historique.sav", "r");
 	if (fHistorique != NULL){
-		char turn[16], x[2], y[2];
+		char turn[1], x[2], y[2];
 		SDL_Rect p;
 		while (fscanf(fHistorique, "%c,%c,%c\n", turn,x,y) != EOF){
 			p.x=atoi(x); p.y=atoi(y);

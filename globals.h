@@ -14,7 +14,6 @@ SDL_Surface *wallpaper;
 SDL_Surface *x, *y, *xy;
 
 int cursorX, cursorY;
-
 int mode, player;
 
 #endif
