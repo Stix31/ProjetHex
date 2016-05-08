@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
@@ -13,11 +14,11 @@
 #include "save.h"
 
 int main(int argc, char *argv[]){
-    SDL_ShowCursor(0);
+	SDL_ShowCursor(0);
 	Uint32 initflags = SDL_INIT_VIDEO;
-    Uint8  video_bpp = 32;
+	Uint8  video_bpp = 32;
 
-    if (SDL_Init(initflags)<0){
+	if (SDL_Init(initflags)<0){
 		fprintf(stderr, "SDL could not be initialized successfully : %s\n", SDL_GetError());
 		return 1;
 	}
@@ -29,7 +30,7 @@ int main(int argc, char *argv[]){
 	}
 	Grid g;
 	initGrid(&g);
-  wallpaper=IMG_Load("Images/wallpaper.jpg");
+	wallpaper=IMG_Load("Images/wallpaper.jpg");
 	TTF_Init();
 	TTF_Font* fontMenu = TTF_OpenFont("arvo/Arvo-Regular.ttf",60);
 	SDL_Rect posB; posB.x=250; posB.y=115; posB.w=260; posB.h=70;
@@ -40,65 +41,38 @@ int main(int argc, char *argv[]){
 	b[3] =initButton(fontMenu,"     quit",posB);
 
 	SDL_WM_SetCaption("Jeu de Hex", NULL);
-	if(argc>1){
-		g.b=SDL_LoadBMP("Images/TMP/hex.bmp");
-		g.bh=SDL_LoadBMP("Images/TMP/hex.bmp");
-		red=SDL_LoadBMP("Images/TMP/red.bmp");
-		blue=SDL_LoadBMP("Images/TMP/blue.bmp");
-		hover=SDL_LoadBMP("Images/TMP/hover.bmp");
-		hred=SDL_LoadBMP("Images/TMP/hover_red.bmp");
-		hblue=SDL_LoadBMP("Images/TMP/hover_blue.bmp");
-		x=SDL_LoadBMP("Images/TMP/x.bmp");
-		y=SDL_LoadBMP("Images/TMP/y.bmp");
-		xy=SDL_LoadBMP("Images/TMP/xy.bmp");
-    cursorgif[0] = IMG_Load("Images/cursor1.png");
-    cursorgif[1] = IMG_Load("Images/cursor2.png");
-    cursorgif[2] = IMG_Load("Images/cursor3.png");
-    cursorgif[3] = IMG_Load("Images/cursor4.png");
-		//SDL_SetColorKey(g.b, SDL_SRCCOLORKEY, SDL_MapRGB(g.b->format, 0, 255, 0));
-		SDL_SetColorKey(g.bh, SDL_SRCCOLORKEY, SDL_MapRGB(g.bh->format, 0, 255, 0));
-		SDL_SetColorKey(blue, SDL_SRCCOLORKEY, SDL_MapRGB(blue->format, 0, 255, 0));
-		SDL_SetColorKey(red, SDL_SRCCOLORKEY, SDL_MapRGB(red->format, 0, 255, 0));
-		SDL_SetColorKey(hred, SDL_SRCCOLORKEY, SDL_MapRGB(hred->format, 0, 255, 0));
-		SDL_SetColorKey(hblue, SDL_SRCCOLORKEY, SDL_MapRGB(hblue->format, 0, 255, 0));
-		SDL_SetColorKey(hover, SDL_SRCCOLORKEY, SDL_MapRGB(hover->format, 0, 255, 0));
-		//SDL_SetColorKey(x, SDL_SRCCOLORKEY, SDL_MapRGB(x->format, 0, 255, 0));
-		SDL_SetColorKey(y, SDL_SRCCOLORKEY, SDL_MapRGB(y->format, 0, 255, 0));
-		SDL_SetColorKey(xy, SDL_SRCCOLORKEY, SDL_MapRGB(xy->format, 0, 255, 0));
-	}else{
-    g.b=IMG_Load("Images/TMP/hex.bmp");
-		g.bh=IMG_Load("Images/TMP/hex.bmp");
-		red=IMG_Load("Images/red.png");
-		blue=IMG_Load("Images/blue.png");
-		hover=IMG_Load("Images/hover.png");
-		hred=IMG_Load("Images/hover_red.png");
-		hblue=IMG_Load("Images/hover_blue.png");
-		x=IMG_Load("Images/x.png");
-		y=IMG_Load("Images/y.png");
-		xy=IMG_Load("Images/xy.png");
-    cursorgif[0] = IMG_Load("Images/cursor1.png");
-    cursorgif[1] = IMG_Load("Images/cursor2.png");
-    cursorgif[2] = IMG_Load("Images/cursor3.png");
-    cursorgif[3] = IMG_Load("Images/cursor4.png");
-	}
-  if( access( "historique.sav", F_OK ) == -1 ) {
-    FILE* fHistorique = NULL;
-    fHistorique = fopen("historique.sav", "w");
-    fclose(fHistorique);
-  }
+
+	g.b=SDL_LoadBMP("Images/TMP/hex.bmp");
+	g.bh=SDL_LoadBMP("Images/TMP/hex.bmp");
+	SDL_SetColorKey(g.b,SDL_SRCCOLORKEY,SDL_MapRGB(g.b->format,150,150,150));
+	SDL_SetColorKey(g.bh,SDL_SRCCOLORKEY,SDL_MapRGB(g.bh->format,150,150,150));
+	red=IMG_Load("Images/red.png");
+	blue=IMG_Load("Images/blue.png");
+	hover=IMG_Load("Images/hover.png");
+	hred=IMG_Load("Images/hover_red.png");
+	hblue=IMG_Load("Images/hover_blue.png");
+	x=IMG_Load("Images/x.png");
+	y=IMG_Load("Images/y.png");
+	xy=IMG_Load("Images/xy.png");
+	SDL_Surface *cursorgif[4];
+	cursorgif[0] = IMG_Load("Images/cursor1.png");
+	cursorgif[1] = IMG_Load("Images/cursor2.png");
+	cursorgif[2] = IMG_Load("Images/cursor3.png");
+	cursorgif[3] = IMG_Load("Images/cursor4.png");
 	mode=0; player=0;
+	srand(time(NULL));
 	while(input(&g,b)){
-        int i;
+		int i;
 		if(!mode){
-      blitImage(wallpaper,screen,0,0);
-      for(i=0; i<4; i++) blitButton(b[i]);
-    }
+			blitImage(wallpaper,screen,0,0);
+			for(i=0; i<4; i++) blitButton(b[i]);
+		}
 		else{
-      SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,150,150,150));
+			SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,150,150,150));
 			update(&g);
 			blitImage(g.b,g.bh,0,0);
 		}
-    mouse(cursorgif);
+		mouse(cursorgif);
 		SDL_Flip(screen);
 	}
 

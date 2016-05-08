@@ -7,7 +7,7 @@ void saveString(int x,int y, int player, char* turn);
 
 void saveTurn(int x,int y, int player);
 
-void loadTurn (Grid *g);
+int loadTurn(Grid *g);
 
 void deleteSave ();
 #endif /* Save_h */

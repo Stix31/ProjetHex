@@ -21,7 +21,6 @@ int input(Grid *g, Button *b){
 	SDL_Rect p=gridCursorPosition();
 	SDL_Event event; SDL_WaitEvent(&event);
 	CellBlock cb;
-	int i;
 	switch(event.type){
 		case SDL_MOUSEMOTION:
 			cursorX = event.motion.x;
@@ -34,10 +33,17 @@ int input(Grid *g, Button *b){
 						case 0:
 							remove("historique.sav");
 							mode=1;
+							pvp=1;
+							saveTurn(0,0, pvp);
 						break;
-						case 1:break;
+						case 1:
+							remove("historique.sav");
+							mode=1;
+							pvp=0;
+							saveTurn(0,0, pvp);
+						break;
 						case 2:
-							loadTurn(g);
+							pvp=loadTurn(g);
 							mode=1;
 						break;
 						case 3:
@@ -46,7 +52,6 @@ int input(Grid *g, Button *b){
 					}
 				break;
 				case 1:
-					if(mode==2)break;
 					if(inGrid() && emptyCell(*g,p)){
 						addToGrid(&(*g),p);
 						cb.content=0;
@@ -56,10 +61,31 @@ int input(Grid *g, Button *b){
 							highLight(g, cb);
 							mode=2;
 						}
-						SDL_Rect gridpos=gridCursorPosition();
-						saveTurn(gridpos.x,gridpos.y, player);
+						saveTurn(p.x,p.y, player);
 						if(player)player=0; else player=1;
+						if(!pvp){
+							do{
+								p.x=rand()%GRID_SIZE;
+								p.y=rand()%GRID_SIZE;
+							}while(!emptyCell(*g,p));
+							addToGrid(&(*g),p);
+							cb.content=0;
+							addToBlock(*g,&cb,p.x,p.y);
+							if((!player && blockContainsX(cb,0) && blockContainsX(cb,GRID_SIZE-1))||(player && blockContainsY(cb,0) && blockContainsY(cb,GRID_SIZE-1))){
+								printf("%s wins\n",player? "red":"blue");
+								highLight(g, cb);
+								mode=2;
+							}
+							saveTurn(p.x,p.y, player);
+							if(player)player=0; else player=1;
+						}
 					}
+				break;
+				case 2: 
+					mode=0;
+					player=0;
+					initGrid(g);
+					g->b=SDL_LoadBMP("Images/TMP/hex.bmp");
 				break;
 				default: break;
 			}
@@ -68,17 +94,6 @@ int input(Grid *g, Button *b){
 			key_pressed = event.key.keysym.sym;
 			switch(key_pressed){
 				case SDLK_ESCAPE: return 0;
-				break;
-				case SDLK_LEFT:
-					addToBlock(*g,&cb,p.x,p.y);
-				break;
-				case SDLK_RIGHT:
-					for(i=0;i<cb.content;i++) printf("%d %d\n", cb.x[i], cb.y[i]);
-					printf("\n");
-				break;
-				case SDLK_UP: break;
-				case SDLK_DOWN:
-					cb.content=0;
 				break;
 				default: break;
 			}

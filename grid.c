@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "grid.h"
 
 SDL_Rect gridCursorPosition(){
 	SDL_Rect pos;

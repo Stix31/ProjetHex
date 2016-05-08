@@ -8,12 +8,12 @@
 #include "view.h"
 #include "grid.h"
 
-SDL_Surface *screen, *red, *blue, *hover, *hred, *hblue, *cursorgif[4];
+SDL_Surface *screen, *red, *blue, *hover, *hred, *hblue;
 SDL_Surface *wallpaper;
 
 SDL_Surface *x, *y, *xy;
 
 int cursorX, cursorY;
-int mode, player;
+int mode, player, pvp;
 
 #endif
