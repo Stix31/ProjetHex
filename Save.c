@@ -14,17 +14,6 @@ void saveString(int x,int y, int player, char* turn){
 	sprintf(turn, "%d,%d,%d\n",player,x,y);
 }
 
-<<<<<<< HEAD
-=======
-void deleteSave (){
-	if( access( "historique.sav", F_OK ) != -1 ) {
-		FILE* fHistorique = NULL;
-		fHistorique = fopen("historique.sav", "w");
-		fclose(fHistorique);
-	}
-}
-
->>>>>>> 71b21431b1aa5d2c7797fe6dc2e4c0318a3d416b
 void saveTurn (int x,int y, int player){
 	FILE* fHistorique = NULL;
 	fHistorique = fopen("historique.sav", "a");

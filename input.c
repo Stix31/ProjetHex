@@ -32,12 +32,8 @@ int input(Grid *g, Button *b){
 				case 0:
 					switch(inWhichButton(b)){
 						case 0:
-<<<<<<< HEAD
 							remove("historique.sav");
-=======
->>>>>>> 71b21431b1aa5d2c7797fe6dc2e4c0318a3d416b
 							mode=1;
-							deleteSave();
 						break;
 						case 1:break;
 						case 2:

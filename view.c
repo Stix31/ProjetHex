@@ -52,7 +52,8 @@ void update(Grid *g){
 }
 
 void mouse(SDL_Surface** s){
-  int time = SDL_GetTicks() / 250;
-  SDL_ShowCursor(0);
-  blitImage(s[time%4], screen, cursorX, cursorY);
+    int time = SDL_GetTicks() / 250;
+    SDL_ShowCursor(0);
+    if(cursorX>=0 && cursorY>=0 && cursorX<WINWI && cursorY<WINHI)
+    	blitImage(s[time%4], screen, cursorX, cursorY);
 }
