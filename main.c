@@ -30,8 +30,6 @@ int main(int argc, char *argv[]){
 	Grid g;
 	initGrid(&g);
   wallpaper=IMG_Load("Images/wallpaper.jpg");
-  blitImage(wallpaper,screen,0,0);
-
 	TTF_Init();
 	TTF_Font* fontMenu = TTF_OpenFont("arvo/Arvo-Regular.ttf",60);
 	SDL_Rect posB; posB.x=250; posB.y=115; posB.w=260; posB.h=70;
@@ -83,9 +81,7 @@ int main(int argc, char *argv[]){
     cursorgif[2] = IMG_Load("Images/cursor3.png");
     cursorgif[3] = IMG_Load("Images/cursor4.png");
 	}
-  if( access( "historique.sav", F_OK ) != -1 ) {
-    NULL;
-  } else {
+  if( access( "historique.sav", F_OK ) == -1 ) {
     FILE* fHistorique = NULL;
     fHistorique = fopen("historique.sav", "w");
     fclose(fHistorique);
