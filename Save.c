@@ -59,14 +59,12 @@ void UndoAction (Grid *g) {
 	while(newLines < lines-1) {
 		fgets(turn,TAILLE_MAX,fHistoriqueAncien);
 		fputs(turn, fHistoriqueNouveau);
-		printf("turn %s ligne %d\n",turn, lines);
 		newLines++;
 	}
 	fclose(fHistoriqueAncien);
 	remove("historique.sav");
 	rename("historique.sav~", "historique.sav");
 	fclose(fHistoriqueNouveau);
-	printf("turn %s ligne %d\n",turn, lines);
   	initGrid(g);
 	g->b=SDL_LoadBMP("Images/TMP/Hex.bmp");
 	player=0;

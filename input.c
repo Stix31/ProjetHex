@@ -54,6 +54,7 @@ int input(Grid *g, Button *b, Button Undo){
 				case 1:
 					if (inButton(Undo)) {
 						UndoAction(g);
+						if (!pvp) UndoAction(g);
 						break;
 					};
 					if(inGrid() && emptyCell(*g,p)){
@@ -78,6 +79,7 @@ int input(Grid *g, Button *b, Button Undo){
 							addToBlock(*g,&cb,p.x,p.y);
 							if((!player && blockContainsX(cb,0) && blockContainsX(cb,GRID_SIZE-1))||(player && blockContainsY(cb,0) && blockContainsY(cb,GRID_SIZE-1))){
 								printf("%s wins\n",player? "red":"blue");
+								remove("historique.sav");
 								highLight(g, cb);
 								mode=2;
 							}
