@@ -52,6 +52,10 @@ int input(Grid *g, Button *b, Button Undo){
 					}
 				break;
 				case 1:
+					if (inButton(Undo)) {
+						UndoAction(g);
+						break;
+					};
 					if(inGrid() && emptyCell(*g,p)){
 						addToGrid(&(*g),p);
 						cb.content=0;
@@ -81,9 +85,6 @@ int input(Grid *g, Button *b, Button Undo){
 							if(player)player=0; else player=1;
 						}
 					}
-					if (inButton(Undo)) {
-						 UndoAction(g);
-					};
 				break;
 				case 2:
 					mode=0;

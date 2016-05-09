@@ -67,9 +67,8 @@ void UndoAction (Grid *g) {
 	rename("historique.sav~", "historique.sav");
 	fclose(fHistoriqueNouveau);
 	printf("turn %s ligne %d\n",turn, lines);
-  initGrid(g);
+  	initGrid(g);
 	g->b=SDL_LoadBMP("Images/TMP/Hex.bmp");
-	//if (player) player=0;
-	//else player=1;
+	player=0;
 	loadTurn(g);
 }
