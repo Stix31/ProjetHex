@@ -2,10 +2,10 @@
 #include "view.h"
 #include "globals.h"
 
-Button initButton(TTF_Font* font, char* text, SDL_Rect rect){
+Button initButton(TTF_Font* font, char* text, SDL_Rect rect, int R, int G, int B){
 	Button b;
 	b.s= SDL_CreateRGBSurface(32,rect.w,rect.h,32,0,0,0,0);
-	SDL_FillRect(b.s,NULL,SDL_MapRGB(b.s->format,0,140,0));
+	SDL_FillRect(b.s,NULL,SDL_MapRGB(b.s->format,R,G,B));
 	b.text=TTF_RenderText_Blended(font,text,(SDL_Color){0,0,0});
 	b.rect=rect;
 	return b;

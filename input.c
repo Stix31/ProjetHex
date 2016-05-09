@@ -16,7 +16,7 @@ int inWhichButton(Button *b){
 	return -1;
 }
 
-int input(Grid *g, Button *b){
+int input(Grid *g, Button *b, Button Undo){
 	SDLKey key_pressed;
 	SDL_Rect p=gridCursorPosition();
 	SDL_Event event; SDL_WaitEvent(&event);
@@ -58,6 +58,7 @@ int input(Grid *g, Button *b){
 						addToBlock(*g,&cb,p.x,p.y);
 						if((!player && blockContainsX(cb,0) && blockContainsX(cb,GRID_SIZE-1))||(player && blockContainsY(cb,0) && blockContainsY(cb,GRID_SIZE-1))){
 							printf("%s wins\n",player? "red":"blue");
+							remove("historique.sav");
 							highLight(g, cb);
 							mode=2;
 						}
@@ -80,8 +81,11 @@ int input(Grid *g, Button *b){
 							if(player)player=0; else player=1;
 						}
 					}
+					if (inButton(Undo)) {
+						 UndoAction(g);
+					};
 				break;
-				case 2: 
+				case 2:
 					mode=0;
 					player=0;
 					initGrid(g);

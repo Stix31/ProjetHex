@@ -40,3 +40,34 @@ int loadTurn(Grid *g) {
 	}
 	return m;
 }
+
+void UndoAction (Grid *g) {
+	int lines=0, newLines=0;
+	int endline;
+	char turn[TAILLE_MAX] = "";
+	FILE* fHistoriqueAncien = NULL;
+	fHistoriqueAncien = fopen("historique.sav", "r");
+	while(!feof(fHistoriqueAncien)) {
+		endline = fgetc(fHistoriqueAncien);
+  	if(endline == '\n') {
+    	lines++;
+  	}
+	}
+	rewind(fHistoriqueAncien);
+	FILE* fHistoriqueNouveau = NULL;
+	fHistoriqueNouveau = fopen("historique.sav~", "w");
+	while(newLines < lines-1) {
+		fgets(turn,TAILLE_MAX,fHistoriqueAncien);
+		fputs(turn, fHistoriqueNouveau);
+		printf("turn %s ligne %d\n",turn, lines);
+		newLines++;
+	}
+	fclose(fHistoriqueAncien);
+	remove("historique.sav");
+	rename("historique.sav~", "historique.sav");
+	fclose(fHistoriqueNouveau);
+	remove("historique.sav~");
+	printf("turn %s ligne %d\n",turn, lines);
+  initGrid(g);
+	loadTurn(g);
+}

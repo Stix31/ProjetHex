@@ -10,7 +10,7 @@ typedef struct{
 	SDL_Rect rect;
 }Button;
 
-Button initButton(TTF_Font* font, char* text, SDL_Rect rect);
+Button initButton(TTF_Font* font, char* text, SDL_Rect rect, int R, int G, int B);
 
 void blitImage(SDL_Surface* s, SDL_Surface* ss, int x, int y);
 
