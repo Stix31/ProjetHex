@@ -4,6 +4,8 @@
 #include "view.h"
 #include "Save.h"
 
+SDL_Rect last;
+
 int inButton(Button b){
 	return cursorX>=b.rect.x && cursorX<b.rect.x+b.rect.w && cursorY>=b.rect.y && cursorY<b.rect.y+b.rect.h;
 }
@@ -16,7 +18,7 @@ int inWhichButton(Button *b){
 	return -1;
 }
 
-int input(Grid *g, Button *b, Button Undo){
+int input(Grid *g, Button *b){
 	SDLKey key_pressed;
 	SDL_Rect p=gridCursorPosition();
 	SDL_Event event; SDL_WaitEvent(&event);
@@ -52,7 +54,7 @@ int input(Grid *g, Button *b, Button Undo){
 					}
 				break;
 				case 1:
-					if (inButton(Undo)) {
+					if (inButton(b[4])) {
 						UndoAction(g);
 						if (!pvp) UndoAction(g);
 						break;
@@ -69,11 +71,41 @@ int input(Grid *g, Button *b, Button Undo){
 						}
 						saveTurn(p.x,p.y, player);
 						if(player)player=0; else player=1;
-						if(!pvp){
-							do{
-								p.x=rand()%GRID_SIZE;
-								p.y=rand()%GRID_SIZE;
-							}while(!emptyCell(*g,p));
+						if(!pvp && mode!=2){
+
+							if(g->cell[5][0]!=2){p.x=5; p.y=0;}
+							else{
+								p.x=last.x; p.y=last.y;
+								if(!g->cell[p.x][p.y+1]) p.y++;
+									else if(!g->cell[p.x-1][p.y+1]){p.x--;p.y++;}
+										else{
+											CellBlock cbBlue; cbBlue.content=0;
+											player=0;addToBlock(*g,&cbBlue,p.x,p.y+1);
+											addToBlock(*g,&cbBlue,p.x-1,p.y+1);player=1;
+											if(blockContainsX(cbBlue,10)){
+												while(g->cell[p.x-1][p.y]==2)p.x--;
+												if(!g->cell[p.x-1][p.y])p.x--;
+												else if(!g->cell[p.x][p.y-1])p.y--;
+													else
+														if(!g->cell[p.x+1][p.y-1]){p.x++; p.y--;}
+														else{
+															while(g->cell[p.x+1][p.y-1]==2 && g->cell[p.x][p.y-1]==1){p.x++; p.y--;}
+															p.y--;
+														}
+											}else{
+												if(!g->cell[p.x+1][p.y])p.x++;
+												else if(!g->cell[p.x+1][p.y-1]){p.x++; p.y--;}
+													else if(!g->cell[p.x][p.y-1])p.y--;
+														else{
+															while(g->cell[p.x][p.y-1]==2 && g->cell[p.x+1][p.y-1]==1)p.y--;
+															p.x++; y--;
+														}
+											}
+										}
+								
+							}
+							printf("%d %d\n", p.x, p.y);
+							last.x=p.x; last.y=p.y;
 							addToGrid(&(*g),p);
 							cb.content=0;
 							addToBlock(*g,&cb,p.x,p.y);

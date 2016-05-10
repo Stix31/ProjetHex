@@ -7,6 +7,6 @@ int inButton(Button b);
 
 int inWhichButton(Button *b);
 
-int input(Grid *g, Button *b, Button Undo);
+int input(Grid *g, Button *b);
 
 #endif

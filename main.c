@@ -34,13 +34,13 @@ int main(int argc, char *argv[]){
 	TTF_Init();
 	TTF_Font* fontMenu = TTF_OpenFont("arvo/Arvo-Regular.ttf",60);
 	SDL_Rect posB; posB.x=250; posB.y=115; posB.w=260; posB.h=70;
-	Button b[4];
+	Button b[5];
 	b[0] =initButton(fontMenu,"      pvp",posB,0,140,0); posB.y+=100;
 	b[1] =initButton(fontMenu," 1 player",posB,0,140,0); posB.y+=100;
 	b[2] =initButton(fontMenu,"     load",posB,0,140,0); posB.y+=100;
 	b[3] =initButton(fontMenu,"     quit",posB,0,140,0);
 	posB.x=0; posB.y=500;
-	Button Undo = initButton(fontMenu,"    Undo",posB,100,100,100);
+	b[4] =initButton(fontMenu,"    Undo",posB,100,100,100);
 
 	SDL_WM_SetCaption("Jeu de Hex", NULL);
 
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]){
 	cursorgif[3] = IMG_Load("Images/cursor4.png");
 	mode=0; player=0;
 	srand(time(NULL));
-	while(input(&g,b,Undo)){
+	while(input(&g,b)){
 		int i;
 		if(!mode){
 			blitImage(wallpaper,screen,0,0);
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
 			SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,150,150,150));
 			update(&g);
 			blitImage(g.b,g.bh,0,0);
-			blitButton(Undo);
+			blitButton(b[4]);
 		}
 		mouse(cursorgif);
 		SDL_Flip(screen);

@@ -49,9 +49,7 @@ void UndoAction (Grid *g) {
 	fHistoriqueAncien = fopen("historique.sav", "r");
 	while(!feof(fHistoriqueAncien)) {
 		endline = fgetc(fHistoriqueAncien);
-  	if(endline == '\n') {
-    	lines++;
-  	}
+  		if(endline == '\n') lines++;
 	}
 	rewind(fHistoriqueAncien);
 	FILE* fHistoriqueNouveau = NULL;
