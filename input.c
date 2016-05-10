@@ -56,7 +56,6 @@ int input(Grid *g, Button *b){
 				case 1:
 					if (inButton(b[4])) {
 						UndoAction(g);
-						if (!pvp) UndoAction(g);
 						break;
 					};
 					if(inGrid() && emptyCell(*g,p)){
@@ -95,16 +94,22 @@ int input(Grid *g, Button *b){
 											}else{
 												if(!g->cell[p.x+1][p.y])p.x++;
 												else if(!g->cell[p.x+1][p.y-1]){p.x++; p.y--;}
-													else if(!g->cell[p.x][p.y-1])p.y--;
-														else{
-															while(g->cell[p.x][p.y-1]==2 && g->cell[p.x+1][p.y-1]==1)p.y--;
-															p.x++; y--;
-														}
+													else if(!g->cell[p.x-1][p.y+1]){p.x--; p.y++;}
+														else if(!g->cell[p.x][p.y-1])p.y--;
+															else{
+																while(g->cell[p.x][p.y-1]==2 && g->cell[p.x+1][p.y-1]==1)p.y--;
+																p.x++; y--;
+															}
 											}
 										}
 								
 							}
-							printf("%d %d\n", p.x, p.y);
+							if(p.x<0 || p.x>GRID_SIZE-1 || p.y<0 || p.y>GRID_SIZE-1 || g->cell[p.x][p.y]){
+								p.y=0;
+								do{
+									p.x=rand()%GRID_SIZE;
+								}while(g->cell[p.x][0]);
+							}
 							last.x=p.x; last.y=p.y;
 							addToGrid(&(*g),p);
 							cb.content=0;

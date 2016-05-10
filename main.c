@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
 			SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,150,150,150));
 			update(&g);
 			blitImage(g.b,g.bh,0,0);
-			blitButton(b[4]);
+			if(pvp)blitButton(b[4]);
 		}
 		mouse(cursorgif);
 		SDL_Flip(screen);
